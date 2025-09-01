@@ -1,0 +1,35 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-app
+  template:
+    metadata:
+      labels:
+        app: payment-app
+    spec:
+      containers:
+      - name: payment-app
+        image: your-dockerhub-username/payment-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: payment-app
+  ports:
+  - port: 80
+    targetPort: 3000
